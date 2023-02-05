@@ -1,24 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext } from 'react'
+import Home from './Content/Home.jsx'
+import Login from './Content/Login.jsx'
+import {BrowserRouter,Routes,Route, Navigate} from 'react-router-dom'
+import "./Style.scss"
+import Register from './Content/Register.jsx'
+import { AuthContext } from './Context/AuthContext.js'
+ function App() {
 
-function App() {
+  const {currUser}=useContext(AuthContext);
+
+
+  const ProtectedRoute=({children})=>{
+     if(!currUser)
+     {
+      return <Navigate to="/login"/>
+     }
+     return children;
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+         <Route path='/'>
+            <Route index element={
+              <ProtectedRoute><Home/></ProtectedRoute>
+              //   // currUser? <Home/> : <Login/>
+              // currUser ? <Home/> : <Login/>
+            }/>
+            <Route path='login' element={<Login/>}/>
+            <Route path='register' element={<Register/>}/>
+
+         </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
+
+export default App;
 
